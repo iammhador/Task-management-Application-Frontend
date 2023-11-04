@@ -3,20 +3,29 @@ import Image from "next/image";
 import leftSideImg from "../app/assets/login.png";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { InputForm } from "./components/ui/form/formInput";
+import { InputForm } from "../components/inputField/inputForm";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { setToLocalStorage } from "./utils/localStorage";
+import { useRouter } from "next/navigation";
 
 const HomePage = () => {
-  const { register, handleSubmit } = useForm();
+  const router = useRouter();
+  const { register, handleSubmit, reset } = useForm();
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
         `http://localhost:5000/api/v1/auth/login`,
         data
       );
+
       if (response) {
         toast.success("User login successfully");
+        setToLocalStorage("token", response?.data?.data?.token);
+        router.push(
+          `/task?userId=${response?.data?.data?.user?._id}&email=${response?.data?.data?.user?.email}`
+        );
+        reset();
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -54,10 +63,12 @@ const HomePage = () => {
               />
 
               <div className="flex flex-col mt-4">
-                <input
+                <button
                   type="submit"
                   className="flex items-center justify-center w-full px-4 py-3 text-base font-medium text-white bg-cyan-500 rounded-xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                />
+                >
+                  Submit
+                </button>
               </div>
             </form>
           </div>

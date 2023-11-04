@@ -3,7 +3,7 @@ import Image from "next/image";
 import leftSideImg from "../assets/register.png";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { InputForm } from "../components/ui/form/formInput";
+import { InputForm } from "../../components/inputField/inputForm";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -66,10 +66,12 @@ const RegisterPage = () => {
                 placeholder={"Enter your password"}
               />
               <div className="flex flex-col mt-4">
-                <input
+                <button
                   type="submit"
                   className="flex items-center justify-center w-full px-4 py-3 text-base font-medium text-white bg-cyan-500 rounded-xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                />
+                >
+                  Submit
+                </button>
               </div>
             </form>
           </div>
