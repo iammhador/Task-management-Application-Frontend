@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Task Management Application
 
-## Getting Started
+This is a task management application that allows users to manage their tasks efficiently. It provides a user-friendly interface for creating, updating, and deleting tasks.
 
-First, run the development server:
+## Technologies Used
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Next.js](https://nextjs.org/): A React framework that enables functionality such as server-side rendering and generating static websites for React-based web applications.
+- [@tanstack/react-query](https://react-query.tanstack.com/): A powerful data-fetching library for React that helps in managing and caching data.
+- [Axios](https://axios-http.com/): A promise-based HTTP client for the browser and Node.js, making it easy to send asynchronous HTTP requests.
+- [Moment.js](https://momentjs.com/): A popular library for parsing, validating, manipulating, and displaying dates and times in JavaScript.
+- [React Hook Form](https://react-hook-form.com/): A library for managing form validation in React.
+- [React Hot Toast](https://react-hot-toast.com/): A toast notification library for React applications.
+- [React Icons](https://react-icons.github.io/react-icons/): A collection of popular icons packaged as React components.
+- [React Loader Spinner](https://www.npmjs.com/package/react-loader-spinner): A library for creating animated loading spinners in React applications.
+- [Sharp](https://www.npmjs.com/package/sharp): A high-performance Node.js image processing module that provides resizing, cropping, and other image operations.
+- [Tailwind CSS](https://tailwindcss.com/): A highly customizable, low-level CSS framework that allows for the rapid building of modern designs.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. Clone the repository to your local machine.
+2. Run `npm install` to install the necessary dependencies.
+3. Set up environment variables in a `.env.local` file.
+4. Run the development server using the command `npm run dev`.
+5. Open your web browser and navigate to the local development URL provided by Next.js.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Usage
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Use the application to manage your tasks effectively.
+- Create, update, and delete tasks as needed.
