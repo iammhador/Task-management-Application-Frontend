@@ -10,8 +10,17 @@ import {
 import Loading from "../../loading";
 import { MdEdit, MdDelete } from "react-icons/md";
 
+import DeleteTaskModal from "../../../components/modal/DeleteTaskModal";
+import CreateTaskModal from "../../../components/modal/createTaskModal";
+import UpdateTaskModal from "../../../components/modal/updateTaskModal";
+
 const TaskPage = ({ searchParams }) => {
   const { userId } = searchParams;
+  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
+  const [showUpdateTaskModal, setShowUpdateTaskModal] = useState(false);
+  const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
+  const [taskUpdateId, setTaskUpdateId] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
 
   const formatDate = (timeString) => {
     const options = {
@@ -29,9 +38,6 @@ const TaskPage = ({ searchParams }) => {
     return formattedDate;
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-
   const {
     isLoading,
     error,
@@ -41,7 +47,7 @@ const TaskPage = ({ searchParams }) => {
     queryKey: ["repoData"],
     queryFn: () =>
       axios
-        .get(`http://localhost:5000/api/v1/task/${userId}`)
+        .get(`${process.env.SERVER_URL}/task/user/${userId}`)
         .then((res) => res.data),
     refetchInterval: 7000,
   });
@@ -53,38 +59,32 @@ const TaskPage = ({ searchParams }) => {
     toast.error("An error has occurred: " + error);
   }
 
+  const handleCreateTask = () => {
+    setShowCreateTaskModal(true);
+  };
+
+  const handleUpdateTask = (data) => {
+    setTaskUpdateId(data);
+    setShowUpdateTaskModal(true);
+  };
+
   const handleDelete = (data) => {
     setDeleteId(data);
-    setShowModal(true);
-  };
-
-  const handleConfirmDelete = () => {
-    axios
-      .delete(`http://localhost:5000/api/v1/task/${deleteId}`)
-      .then((res) => {
-        toast.success("Task deleted successfully:");
-        setShowModal(false);
-        setDeleteId(null);
-      })
-      .catch((error) => {
-        toast.error("An error has occurred: " + error);
-      });
-  };
-
-  const handleCancelDelete = () => {
-    setShowModal(false);
-    setDeleteId(null);
+    setShowDeleteTaskModal(true);
   };
 
   return (
-    <div className="my-10 mx-5 h-screen">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 ">
+    <div className="my-10 mx-10">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {taskData?.data ? (
           taskData?.data?.map((task) => (
-            <section key={task._id} className="w-full">
+            <section key={task?._id} className="w-full">
               <div className="relative items-center w-full p-6 mx-auto max-w-md bg-white shadow-xl rounded-xl">
                 <div className="flex justify-evenly items-center mb-4">
-                  <button className="px-2 py-1 mx-1 text-blue-500">
+                  <button
+                    onClick={() => handleUpdateTask(task?._id)}
+                    className="px-2 py-1 mx-1 text-blue-500"
+                  >
                     <MdEdit className="text-2xl" />
                   </button>
                   <span className="block mx-1 text-xs font-semibold text-center text-cyan-500 capitalize">
@@ -116,34 +116,32 @@ const TaskPage = ({ searchParams }) => {
         ) : (
           <p className="text-cyan-500">No data found</p>
         )}
-        {showModal && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white w-1/3 rounded-md p-6">
-              <p>Are you sure you want to delete this task?</p>
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={handleConfirmDelete}
-                  className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
-                >
-                  Confirm
-                </button>
-                <button
-                  onClick={handleCancelDelete}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-md"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="flex justify-center items-center my-5">
-        <button className="uppercase bg-cyan-500 text-gray-50 font-medium py-3 px-5 rounded-lg">
+        <button
+          onClick={() => handleCreateTask()}
+          className="uppercase bg-cyan-500 text-gray-50 font-medium py-3 px-5 rounded-lg"
+        >
           Add Task
         </button>
+        <CreateTaskModal
+          setShowModal={setShowCreateTaskModal}
+          showModal={showCreateTaskModal}
+          userId={userId}
+        />
       </div>
+      <UpdateTaskModal
+        setShowModal={setShowUpdateTaskModal}
+        showModal={showUpdateTaskModal}
+        taskId={taskUpdateId}
+      />
+      <DeleteTaskModal
+        deleteId={deleteId}
+        setShowModal={setShowDeleteTaskModal}
+        setDeleteId={setDeleteId}
+        showModal={showDeleteTaskModal}
+      />
     </div>
   );
 };

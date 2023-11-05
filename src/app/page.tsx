@@ -15,7 +15,7 @@ const HomePage = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/auth/login`,
+        `${process.env.SERVER_URL}/auth/login`,
         data
       );
 

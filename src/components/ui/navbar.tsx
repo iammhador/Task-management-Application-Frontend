@@ -4,6 +4,7 @@ import Image from "next/image";
 import { removeFromLocalStorage } from "../../app/utils/localStorage";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,10 +19,10 @@ const Navbar = () => {
     <nav className="bg-gray-200 shadow ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+          <Link href="/" className="flex items-center">
             <Image src={logo} width={30} height={20} alt="Logo" />
             <h5 className="ml-2">Task Management Application</h5>
-          </div>
+          </Link>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             <button
               onClick={() => logout()}

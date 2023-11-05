@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { getFromLocalStorage } from "../utils/localStorage";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
-import Footer from "../../components/ui/footer";
 import Navbar from "../../components/ui/navbar";
 
 const PrivateLayout = ({ children }) => {
@@ -26,7 +25,6 @@ const PrivateLayout = ({ children }) => {
     <div>
       <Navbar />
       {children}
-      <Footer />
     </div>
   );
 };
