@@ -16,17 +16,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-200 shadow ">
+    <nav className="bg-gray-900 shadow ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center">
             <Image src={logo} width={30} height={20} alt="Logo" />
-            <h5 className="ml-2">Task Management Application</h5>
+            <h5 className="ml-2 text-gray-50">Task Management Application</h5>
           </Link>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             <button
               onClick={() => logout()}
-              className="px-3 py-2 text-sm font-medium text-gray-900  hover:text-gray-500 "
+              className="px-3 py-2 font-medium text-gray-50  hover:text-gray-200 "
             >
               Logout
             </button>
@@ -75,12 +75,12 @@ const Navbar = () => {
 
       <div className={`${isOpen ? "block" : "hidden"} sm:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1">
-          <a
-            href="#"
-            className="block px-3 py-2 text-base font-medium text-gray-900  hover:text-gray-500 "
+          <button
+            onClick={() => logout()}
+            className="px-3 py-2 font-medium text-gray-50  hover:text-gray-200 "
           >
-            Contact
-          </a>
+            Logout
+          </button>
         </div>
       </div>
     </nav>

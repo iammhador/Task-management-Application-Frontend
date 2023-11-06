@@ -15,6 +15,7 @@ import CreateTaskModal from "../../../components/modal/createTaskModal";
 import UpdateTaskModal from "../../../components/modal/updateTaskModal";
 import { getFromLocalStorage } from "../../utils/localStorage";
 import { jwtDecode } from "jwt-decode";
+import { setTimeout } from "timers";
 
 const TaskPage = ({ searchParams }) => {
   const { searchParamsUserId } = searchParams;
@@ -23,11 +24,26 @@ const TaskPage = ({ searchParams }) => {
   const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
   const [taskUpdateId, setTaskUpdateId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [delaySearch, setDelaySearch] = useState("");
 
   const token = getFromLocalStorage("token");
   const decoded = jwtDecode(token) as { userInfo: { _id: string } } | null;
   const decodedUserId = decoded?.userInfo?._id;
   const userId = searchParamsUserId ? searchParamsUserId : decodedUserId;
+
+  const query = {};
+
+  useEffect(() => {
+    const delayedSearch = setTimeout(() => {
+      setDelaySearch(searchQuery);
+    }, 3000);
+    return () => clearTimeout(delayedSearch);
+  }, [searchQuery]);
+
+  if (!!delaySearch) {
+    query["searchParams"] = delaySearch;
+  }
 
   const formatDate = (timeString) => {
     const formattedDate = moment(timeString).format("YYYY-MM-DD HH:mm:ss");
@@ -43,7 +59,9 @@ const TaskPage = ({ searchParams }) => {
     queryKey: ["repoData"],
     queryFn: () =>
       axios
-        .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/task/user/${userId}`)
+        .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/task/user/${userId}`, {
+          params: query,
+        })
         .then((res) => res.data),
     refetchInterval: 7000,
   });
@@ -69,8 +87,30 @@ const TaskPage = ({ searchParams }) => {
     setShowDeleteTaskModal(true);
   };
 
+  const handleReset = () => {
+    setSearchQuery("");
+    setDelaySearch("");
+  };
+
   return (
     <div className="my-10 mx-10">
+      <form className="flex flex-col md:flex-row items-center justify-center mb-10">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search..."
+          className="px-3 py-2 mx-1 text-sm rounded-md border-2 border-cyan-500 md:mb-0"
+        />
+
+        <button
+          type="button"
+          onClick={handleReset}
+          className="px-3 py-2 mx-1 my-2 text-sm font-medium rounded-md bg-red-500 text-gray-50"
+        >
+          Reset
+        </button>
+      </form>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {taskData?.data ? (
           taskData?.data?.map((task) => (
