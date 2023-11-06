@@ -26,20 +26,21 @@ const TaskPage = ({ searchParams }) => {
   const [deleteId, setDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [delaySearch, setDelaySearch] = useState("");
-
+  const [page, setPage] = useState();
   const token = getFromLocalStorage("token");
   const decoded = jwtDecode(token) as { userInfo: { _id: string } } | null;
   const decodedUserId = decoded?.userInfo?._id;
   const userId = searchParamsUserId ? searchParamsUserId : decodedUserId;
 
   const query = {};
+  query["page"] = page;
 
   useEffect(() => {
     const delayedSearch = setTimeout(() => {
       setDelaySearch(searchQuery);
     }, 3000);
     return () => clearTimeout(delayedSearch);
-  }, [searchQuery]);
+  }, [searchQuery, page]);
 
   if (!!delaySearch) {
     query["searchParams"] = delaySearch;
@@ -90,6 +91,10 @@ const TaskPage = ({ searchParams }) => {
   const handleReset = () => {
     setSearchQuery("");
     setDelaySearch("");
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
   };
 
   return (
@@ -166,6 +171,19 @@ const TaskPage = ({ searchParams }) => {
           showModal={showCreateTaskModal}
           userId={userId}
         />
+      </div>
+      <div className="flex justify-center space-x-1 mt-10 text-gray-100">
+        {[...Array(taskData?.meta?.totalPages)].map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            title={`Page ${index + 1}`}
+            className="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border rounded shadow-md bg-gray-900 text-gray-50"
+            onClick={() => handlePageClick(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
       <UpdateTaskModal
         setShowModal={setShowUpdateTaskModal}
