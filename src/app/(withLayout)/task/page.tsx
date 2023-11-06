@@ -26,6 +26,8 @@ const TaskPage = ({ searchParams }) => {
   const [deleteId, setDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [delaySearch, setDelaySearch] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
   const [page, setPage] = useState();
   const token = getFromLocalStorage("token");
   const decoded = jwtDecode(token) as { userInfo: { _id: string } } | null;
@@ -34,6 +36,8 @@ const TaskPage = ({ searchParams }) => {
 
   const query = {};
   query["page"] = page;
+  query["sortBy"] = sortBy;
+  query["sortOrder"] = sortOrder;
 
   useEffect(() => {
     const delayedSearch = setTimeout(() => {
@@ -93,29 +97,50 @@ const TaskPage = ({ searchParams }) => {
     setDelaySearch("");
   };
 
+  const handleFilter = async () => {
+    if (sortOrder === "desc") {
+      setSortOrder("asc");
+      await refetch();
+    } else {
+      setSortOrder("desc");
+      await refetch();
+    }
+    setSortBy("createdAt");
+  };
+
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
   };
 
   return (
     <div className="my-10 mx-10">
-      <form className="flex flex-col md:flex-row items-center justify-center mb-10">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search..."
-          className="px-3 py-2 mx-1 text-sm rounded-md border-2 border-cyan-500 md:mb-0"
-        />
+      {taskData?.data.length > 0 && (
+        <form className="flex flex-col md:flex-row items-center justify-center mb-10">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search..."
+            className="px-3 py-2 mx-1 text-sm rounded-md border-2 border-cyan-500 md:mb-0"
+          />
 
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-3 py-2 mx-1 my-2 text-sm font-medium rounded-md bg-red-500 text-gray-50"
-        >
-          Reset
-        </button>
-      </form>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-3 py-2 mx-1 my-2 text-sm font-medium rounded-md bg-red-500 text-gray-50"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={handleFilter}
+            className="px-3 py-2 mx-1 my-2 text-sm font-medium rounded-md bg-cyan-500 text-gray-50"
+          >
+            Filter
+          </button>
+        </form>
+      )}
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {taskData?.data ? (
           taskData?.data?.map((task) => (
@@ -172,19 +197,25 @@ const TaskPage = ({ searchParams }) => {
           userId={userId}
         />
       </div>
-      <div className="flex justify-center space-x-1 mt-10 text-gray-100">
-        {[...Array(taskData?.meta?.totalPages)].map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            title={`Page ${index + 1}`}
-            className="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border rounded shadow-md bg-gray-900 text-gray-50"
-            onClick={() => handlePageClick(index + 1)}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+
+      {taskData?.data.length > 0 && (
+        <>
+          <div className="flex justify-center space-x-1 mt-10 text-gray-100">
+            {[...Array(taskData?.meta?.totalPages)].map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                title={`Page ${index + 1}`}
+                className="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border rounded shadow-md bg-gray-900 text-gray-50"
+                onClick={() => handlePageClick(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
       <UpdateTaskModal
         setShowModal={setShowUpdateTaskModal}
         showModal={showUpdateTaskModal}

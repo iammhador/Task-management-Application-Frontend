@@ -57,7 +57,7 @@ const RegisterPage = () => {
               <InputForm
                 register={register}
                 title={"email"}
-                type={"text"}
+                type={"email"}
                 name={"email"}
                 placeholder={"Enter your email"}
               />
