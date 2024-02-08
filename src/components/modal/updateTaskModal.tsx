@@ -28,7 +28,6 @@ const UpdateTaskModal = ({ setShowModal, showModal, taskId }) => {
   //@ Update A Task =>
   const { register, handleSubmit, reset } = useForm();
   const handleUpdateTask = async (data) => {
-    console.log(data);
     try {
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/task/${taskId}`,

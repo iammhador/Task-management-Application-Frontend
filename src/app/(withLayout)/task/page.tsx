@@ -68,7 +68,7 @@ const TaskPage = ({ searchParams }) => {
           params: query,
         })
         .then((res) => res.data),
-    refetchInterval: 7000,
+    refetchInterval: 4000,
   });
 
   refetch();
@@ -114,40 +114,50 @@ const TaskPage = ({ searchParams }) => {
   };
 
   return (
-    <div className="my-10 mx-10">
+    <div className=" bg-gradient-to-br from-white via-sky-400  to-gray-400">
       {taskData?.data.length > 0 && (
-        <form className="flex flex-col md:flex-row items-center justify-center mb-10">
+        <form className=" flex flex-col md:flex-row items-center justify-center mb-10">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search..."
-            className="px-3 py-2 mx-1 text-sm rounded-md border-2 border-cyan-500 md:mb-0"
+            className="px-3 py-2 mx-1 mb-2 text-sm rounded-md border-1 border-black md:mb-0 input-search mt-10 md:mt-10"
           />
 
           <button
             type="button"
             onClick={handleReset}
-            className="px-3 py-2 mx-1 my-2 text-sm font-medium rounded-md bg-red-500 text-gray-50"
+            className="px-3 py-2 mx-1 mb-2 text-sm font-medium rounded-md bg-red-500 text-gray-50 md:mb-0 button-reset mt-2 md:mt-10"
           >
             Reset
           </button>
           <button
             type="button"
             onClick={handleFilter}
-            className="px-3 py-2 mx-1 my-2 text-sm font-medium rounded-md bg-cyan-500 text-gray-50"
+            className="px-3 py-2 mx-1 mb-2 text-sm font-medium rounded-md bg-cyan-500 text-gray-50 md:mb-0 button-filter mt-2 md:mt-10"
           >
             Filter
           </button>
         </form>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <div className="flex flex-col md:flex-row justify-center mb-5">
+        <h3 className="bg-cyan-900 mx-2 mb-2 text-white text-base font-bold py-3 px-5 rounded-lg task-count total-task md:mb-0 hover:bg-black">
+          TOTAL TASK: {taskData?.meta?.totalCount}
+        </h3>
+        <h3 className="bg-cyan-700 mx-2 mb-2 text-white text-base font-bold py-3 px-5 rounded-lg task-count completed-task md:mb-0 hover:bg-black">
+          COMPLETED TASKS:{" "}
+          {taskData?.data?.filter((task) => task?.status === "complete").length}
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 ">
         {taskData?.data ? (
           taskData?.data?.map((task) => (
-            <section key={task?._id} className="w-full">
+            <section key={task?._id} className="w-full task-card ">
               <div
-                className={`relative items-center w-full p-6 mx-auto max-w-md shadow-xl rounded-xl ${
+                className={`relative items-center w-full p-6 mx-auto max-w-md shadow-xl rounded-xl hover:bg-black task-content ${
                   task?.priority === "Low"
                     ? "bg-green-500"
                     : task?.priority === "Medium"
@@ -178,9 +188,9 @@ const TaskPage = ({ searchParams }) => {
 
                 <div className="text-center">
                   {task?.status === "complete" ? (
-                    <MdCheck className="text-2xl text-white mx-auto" />
+                    <MdCheck className="text-3xl text-blue-700 mx-auto p-1 bg-white rounded-lg" />
                   ) : task?.status === "incomplete" ? (
-                    <MdClose className="text-2xl text-black mx-auto" />
+                    <MdClose className="text-3xl text-red-700 mx-auto p-1 bg-white rounded-lg" />
                   ) : undefined}
 
                   <h4 className="mt-4 text-xl font-semibold leading-none tracking-tighter text-white lg:text-2xl">
@@ -205,7 +215,7 @@ const TaskPage = ({ searchParams }) => {
       <div className="flex justify-center items-center my-5">
         <button
           onClick={() => handleCreateTask()}
-          className="uppercase bg-cyan-500 text-gray-50 font-medium py-3 px-5 rounded-lg"
+          className="uppercase bg-cyan-500 text-gray-50 font-medium py-3 px-5 rounded-lg button-add-task"
         >
           Add Task
         </button>
@@ -218,13 +228,13 @@ const TaskPage = ({ searchParams }) => {
 
       {taskData?.data.length > 0 && (
         <>
-          <div className="flex justify-center space-x-1 mt-10 text-gray-100">
+          <div className="flex justify-center space-x-1 mt-10 text-gray-100 pb-5 md:pb-10">
             {[...Array(taskData?.meta?.totalPages)].map((_, index) => (
               <button
                 key={index}
                 type="button"
                 title={`Page ${index + 1}`}
-                className="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border rounded shadow-md bg-gray-900 text-gray-50"
+                className="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border rounded shadow-md bg-white text-black pagination-button"
                 onClick={() => handlePageClick(index + 1)}
               >
                 {index + 1}
