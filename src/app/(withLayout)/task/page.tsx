@@ -8,7 +8,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import Loading from "../../loading";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdCheck, MdClose } from "react-icons/md";
 import moment from "moment";
 import DeleteTaskModal from "../../../components/modal/DeleteTaskModal";
 import CreateTaskModal from "../../../components/modal/createTaskModal";
@@ -70,6 +70,7 @@ const TaskPage = ({ searchParams }) => {
         .then((res) => res.data),
     refetchInterval: 7000,
   });
+
   refetch();
 
   if (isLoading) return <Loading />;
@@ -145,32 +146,49 @@ const TaskPage = ({ searchParams }) => {
         {taskData?.data ? (
           taskData?.data?.map((task) => (
             <section key={task?._id} className="w-full">
-              <div className="relative items-center w-full p-6 mx-auto max-w-md bg-white shadow-xl rounded-xl">
+              <div
+                className={`relative items-center w-full p-6 mx-auto max-w-md shadow-xl rounded-xl ${
+                  task?.priority === "Low"
+                    ? "bg-green-500"
+                    : task?.priority === "Medium"
+                    ? "bg-blue-500"
+                    : task?.priority === "High"
+                    ? "bg-red-500"
+                    : "bg-black"
+                }`}
+              >
                 <div className="flex justify-evenly items-center mb-4">
                   <button
                     onClick={() => handleUpdateTask(task?._id)}
-                    className="px-2 py-1 mx-1 text-blue-500"
+                    className="px-2 py-1 mx-1 text-gray-200"
                   >
                     <MdEdit className="text-2xl" />
                   </button>
-                  <span className="block mx-1 text-xs font-semibold text-center text-cyan-500 capitalize">
+                  <span className="block mx-1 text-xs font-semibold text-center text-gray-200 capitalize">
                     {formatDate(task?.createdAt)}
                   </span>
+
                   <button
                     onClick={() => handleDelete(task?._id)}
-                    className="px-2 py-1 mx-1 text-red-500"
+                    className="px-2 py-1 mx-1 text-gray-200"
                   >
                     <MdDelete className="text-2xl" />
                   </button>
                 </div>
 
                 <div className="text-center">
-                  <h4 className="mt-4 text-xl font-semibold leading-none tracking-tighter text-neutral-600 lg:text-2xl">
+                  {task?.status === "complete" ? (
+                    <MdCheck className="text-2xl text-white mx-auto" />
+                  ) : task?.status === "incomplete" ? (
+                    <MdClose className="text-2xl text-black mx-auto" />
+                  ) : undefined}
+
+                  <h4 className="mt-4 text-xl font-semibold leading-none tracking-tighter text-white lg:text-2xl">
                     {task?.title.length > 50
                       ? task?.title.slice(0, 50) + "..."
                       : task?.title}
                   </h4>
-                  <p className="mt-3 text-base leading-relaxed text-gray-500">
+                  <p className="mt-3 text-base leading-relaxed text-gray-200">
                     {task?.description.length > 100
                       ? task?.description.slice(0, 100) + "..."
                       : task?.description}

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { InputForm } from "../inputField/inputForm";
 import { useEffect, useState } from "react";
+import SelectField from "../selectField/selectField";
 
 const UpdateTaskModal = ({ setShowModal, showModal, taskId }) => {
   const [taskData, setTaskData] = useState(null);
@@ -27,6 +28,7 @@ const UpdateTaskModal = ({ setShowModal, showModal, taskId }) => {
   //@ Update A Task =>
   const { register, handleSubmit, reset } = useForm();
   const handleUpdateTask = async (data) => {
+    console.log(data);
     try {
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/task/${taskId}`,
@@ -70,6 +72,23 @@ const UpdateTaskModal = ({ setShowModal, showModal, taskId }) => {
                 type={"text"}
                 name={"description"}
                 placeholder={taskData?.data?.description}
+              />
+
+              <SelectField
+                register={register}
+                title="status"
+                options={[
+                  {
+                    value: "complete",
+                    label: "Complete",
+                    colorClass: "text-green-700",
+                  },
+                  {
+                    value: "incomplete",
+                    label: "Incomplete",
+                    colorClass: "text-red-700",
+                  },
+                ]}
               />
 
               <div className="flex justify-end mt-4">

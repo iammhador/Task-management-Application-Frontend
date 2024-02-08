@@ -2,20 +2,29 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { InputForm } from "../inputField/inputForm";
+import SelectField from "../selectField/selectField";
 
 const CreateTaskModal = ({ setShowModal, showModal, userId }) => {
   //@ Create A Task =>
   const { register, handleSubmit, reset } = useForm();
-  const handleCreateTask = async (data) => {
+  const handleCreateTask = async (data: {
+    title: string;
+    description: string;
+    priority: string;
+    userId: string;
+  }) => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/task`,
         {
           title: data?.title,
           description: data?.description,
+          priority: data?.priority,
+          status: "incomplete",
           userId: userId,
         }
       );
+
       if (response) {
         toast.success("Task created successfully");
         reset();
@@ -54,6 +63,20 @@ const CreateTaskModal = ({ setShowModal, showModal, userId }) => {
                 type={"text"}
                 name={"description"}
                 placeholder={"Enter your description"}
+              />
+
+              <SelectField
+                register={register}
+                title="priority"
+                options={[
+                  { value: "Low", label: "Low", colorClass: "text-green-500" },
+                  {
+                    value: "Medium",
+                    label: "Medium",
+                    colorClass: "text-blue-500",
+                  },
+                  { value: "High", label: "High", colorClass: "text-red-500" },
+                ]}
               />
 
               <div className="flex justify-end mt-4">
